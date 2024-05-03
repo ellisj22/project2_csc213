@@ -14,6 +14,7 @@ public class PolygonJsonReplyTranslator {
         JsonNode resultsNode = rootNode.path("results");
         JsonNode resultNode = resultsNode.get(0);
 
+
         double closePrice = resultNode.get("c").asDouble();
         double highestPrice = resultNode.get("h").asDouble();
         double lowestPrice = resultNode.get("l").asDouble();
@@ -22,6 +23,7 @@ public class PolygonJsonReplyTranslator {
         long timestamp = resultNode.get("t").asLong();
         double tradingVolume = resultNode.get("v").asDouble();
 
-        return new StockQuote(symbol, closePrice, highestPrice, lowestPrice, numberOfTransactions, openPrice, timestamp, tradingVolume);
+        return new StockQuote(symbol, closePrice, highestPrice, lowestPrice, 
+        numberOfTransactions, openPrice, timestamp, tradingVolume);
     }
 }
