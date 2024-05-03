@@ -36,20 +36,29 @@ public class PolygonStockQuoteProvider implements StockQuoteProvider{
     return endpointUrl;
 }
 
-    public static String sendGetRequest(String endpointUrl) throws IOException {
-        StringBuilder response = new StringBuilder();
-        URL url = new URL(endpointUrl);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
+    public static String sendGetRequest(String endpointUrl) {
+        try {
+            URL url = new URL(endpointUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
+            int statusCode = connection.getResponseCode();
+            if (statusCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder responseData = new StringBuilder();
+                String inputLine;
+                while ((inputLine = reader.readLine()) != null) {
+                    responseData.append(inputLine);
+                }
+                reader.close();
+                return responseData.toString();
+            } else {
+                System.out.println("Failed to fetch data from URL. Status code: " + statusCode);
+                return null;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-
-        return response.toString();
     }
-
 }
